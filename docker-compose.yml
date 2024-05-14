@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    tty: true
+    # restart: always
+    # command: npm start  # この行を追加
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    tty: true
+    # restart: always
+    # command: npm start  # この行を追加
+
+  db:
+    image: mysql:8.0
+    # command: --lower_case_table_names=2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: qc_user
+      MYSQL_PASSWORD: qc_pass
+      MYSQL_DATABASE: quizconnect
+    volumes:
+      - ./docker/mysql-data:/var/lib/mysql
+    # restart: always
+

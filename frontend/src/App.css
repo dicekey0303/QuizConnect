@@ -1,0 +1,81 @@
+/* グローバルスタイル */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  overflow-x: hidden; /* 横スクロールを禁止 */
+}
+
+/* アプリケーションのコンテナ */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* メインコンテンツ */
+main {
+  flex: 1;
+
+  /* padding: 2rem; */
+
+  /* ヘッダーの高さ分のパディングを追加 */
+  /* padding-top: 80px;  */
+}
+
+/* セクション */
+section {
+  margin-bottom: 2rem;
+}
+
+/* 見出し */
+h1, h2, h3 {
+  color: #333;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* パラグラフ */
+p {
+  line-height: 1.6;
+  color: #666;
+}
+
+/* リンク */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ボタン */
+button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

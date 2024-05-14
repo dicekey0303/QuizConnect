@@ -1,0 +1,62 @@
+.dashboard-page {
+/* padding: 3rem; */
+background-image: url('../../components/assets/images/高度.png');
+background-size: cover;
+background-position: top;
+ /* ヘッダーとフッターの高さが合計100pxと仮定 */
+min-height: calc(100vh - 100px);
+/* 中央に寄せる */
+padding: 4rem;
+
+}
+  
+  .dashboard-page h1{
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #ffffff; /* ややグレーの白色 */
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.8), 2px 2px 10px rgba(0,0,0,0.5); /* 細かい黒の影とぼかしを追加 */
+
+
+  }
+
+  .dashboard-page p{
+    font-size: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #ffffff; /* ややグレーの白色 */
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.8), 2px 2px 10px rgba(0,0,0,0.5); /* 細かい黒の影とぼかしを追加 */
+    
+  }
+
+  .dashboard-page h2{
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #ffffff; /* ややグレーの白色 */
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.8), 2px 2px 10px rgba(0,0,0,0.5); /* 細かい黒の影とぼかしを追加 */
+  
+  }
+
+
+  .dashboard-content {
+    margin-top: 2rem;
+    background-color: rgba(88, 77, 77, 0.5); /* 50%の透明度で黒 */
+    padding: 1rem;
+    border-radius: 4px;
+
+  }
+  
+  .admin-section {
+    margin-top: 2rem;
+    background-color: rgba(238, 230, 230, 0.5); /* 50%の透明度で黒 */
+    padding: 1rem;
+    border-radius: 4px;
+
+  }
+
+  .admin-section p{
+    color: #272626; /* ややグレーの白色 */
+    text-shadow: none;
+   
+  }
