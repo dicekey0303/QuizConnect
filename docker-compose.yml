@@ -30,16 +30,14 @@ services:
     tty: true
     # restart: always
     # command: npm start  # この行を追加
+    env_file:
+      - .env
 
   db:
     image: mysql:8.0
-    # command: --lower_case_table_names=2
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: qc_user
-      MYSQL_PASSWORD: qc_pass
-      MYSQL_DATABASE: quizconnect
+    env_file:
+      - .env
     volumes:
       - ./docker/mysql-data:/var/lib/mysql
-    # restart: always
-

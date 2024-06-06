@@ -1,9 +1,0 @@
-{
-    "development": {
-      "username": "qc_user",
-      "password": "qc_pass",
-      "database": "quizconnect",
-      "host": "db",
-      "dialect": "mysql"
-    }
-  }
