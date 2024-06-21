@@ -191,8 +191,8 @@ module.exports = {
     const questions = await queryInterface.sequelize.query(
       "SELECT id FROM Questions",
       { type: queryInterface.sequelize.QueryTypes.SELECT }
-    );    
-    
+    );
+
     // question_choicesの挿入
     await queryInterface.bulkInsert('question_choices', [
       {
@@ -367,7 +367,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       },
-      // ... 
+      // ...
       // 問題7までの選択肢
       {
         question_id: questions[6].id,

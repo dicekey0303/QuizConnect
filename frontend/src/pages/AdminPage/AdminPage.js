@@ -34,6 +34,9 @@ const AdminPage = () => {
           >
             コンテンツ管理
           </li>
+          <li>
+          <Link to="/admin/questions/create">問題作成</Link>
+          </li>
         </ul>
       </nav>
       <div className="admin-content">

@@ -28,7 +28,7 @@ export const updateQuestion = async (questionId, questionData) => {
       throw new Error('Failed to update question');
     }
   };
-  
+
   export const deleteQuestion = async (questionId) => {
     try {
       await api.delete(`/questions/${questionId}`);
@@ -51,7 +51,7 @@ export const updateQuestion = async (questionId, questionData) => {
       throw new Error('Failed to fetch question');
     }
   };
-  
+
   // ...
   export const getQuestionsByCategoryId = async (categoryId) => {
     try {
@@ -62,3 +62,12 @@ export const updateQuestion = async (questionId, questionData) => {
       throw error;
     }
   };
+
+export const createQuestion = async (questionData) => {
+  try {
+    const response = await api.post('/questions', questionData);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to create question');
+  }
+};

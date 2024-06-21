@@ -34,7 +34,7 @@ exports.getQuestionById = async (req, res) => {
       include: [
         { model: Category, attributes: ['id', 'name'] },
         { model: Subcategory, attributes: ['id', 'name'] },
-        { model: QuestionChoice, attributes: ['id', 'choice_text', 'is_correct'] },
+        { model: QuestionChoice, as: 'QuestionChoices', attributes: ['id', 'choice_text', 'is_correct'] },
       ],
     });
     if (!question) {
@@ -49,16 +49,47 @@ exports.getQuestionById = async (req, res) => {
 
 // 新しい問題の作成
 exports.createQuestion = async (req, res) => {
-  const { categoryId, subcategoryId, title, statement, difficulty, explanation } = req.body;
+  const { category, subcategory, title, statement, difficulty, access_level, explanation, choices } = req.body;
+
   try {
+    // Categoryを作成
+    const categoryInstance = await Category.create({ name: category });
+
+    // Subcategoryを作成
+    const subcategoryInstance = await Subcategory.create({
+      name: subcategory,
+      category_id: categoryInstance.id
+    });
+
+    // 新しいQuestionを作成
     const question = await Question.create({
-      category_id: categoryId,
-      subcategory_id: subcategoryId,
+      category_id: categoryInstance.id,
+      subcategory_id: subcategoryInstance.id,
+      category: categoryInstance.name, // 追加
+      subcategory: subcategoryInstance.name, // 追加
       title,
       statement,
       difficulty,
+      access_level,
       explanation
+    }, {
+      include: [{
+        model: QuestionChoice,
+        as: 'QuestionChoices'
+      }]
     });
+
+
+    await Promise.all(choices.map(async (choice) => {
+      await QuestionChoice.create({
+        question_id: question.id,
+        choice_text: choice.choice_text,
+        is_correct: choice.is_correct,
+        createdAt: new Date(),
+        updatedAt: new Date()
+        });
+    }));
+
     res.status(201).json(question);
   } catch (error) {
     console.error(error);

@@ -15,6 +15,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
 import './App.css';
+import QuestionCreatePage from './pages/QuestionCreatePage/QuestionCreatePage';
 
 const App = () => {
   return (
@@ -33,7 +34,8 @@ const App = () => {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
               <Route path="/admin/*" element={<AdminRoute><AdminPage /></AdminRoute>} />
-          
+              <Route path="/admin/questions/create" element={<AdminRoute><QuestionCreatePage /></AdminRoute>} />
+
 
               {/* <PrivateRoute path="/dashboard" element={<DashboardPage />} />
               <AdminRoute path="/admin/*" element={<AdminPage />} /> */}

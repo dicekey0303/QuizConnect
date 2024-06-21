@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/auth';
+import './RegisterPage.css';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -21,7 +22,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
+    <div className = "register-page">
       <h2>ユーザー登録</h2>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 import './DashboardPage.css';
 
 const DashboardPage = () => {
@@ -17,6 +18,9 @@ const DashboardPage = () => {
           <div className="admin-section">
             <h3>管理者専用セクション</h3>
             <p>管理者向けの機能や情報をここに追加します。</p>
+            <Link to="/admin" className="admin-link">
+              管理者ページへ
+            </Link>
           </div>
         )}
       </div>

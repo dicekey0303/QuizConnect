@@ -16,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
+    category: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    subcategory: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false
@@ -37,7 +45,10 @@ module.exports = (sequelize, DataTypes) => {
   Question.associate = (models) => {
     Question.belongsTo(models.Category, { foreignKey: 'category_id' });
     Question.belongsTo(models.Subcategory, { foreignKey: 'subcategory_id' });
-    Question.hasMany(models.QuestionChoice, { foreignKey: 'question_id' });
+    Question.hasMany(models.QuestionChoice, {
+      foreignKey: 'question_id',
+      as: 'QuestionChoices'
+    });
     Question.hasMany(models.UserAnswer, { foreignKey: 'question_id' });
   };
 

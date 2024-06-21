@@ -128,7 +128,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      access_level: { 
+      access_level: {
         type: Sequelize.ENUM('unauthorized', 'free', 'paid', 'admin'),
         allowNull: false,
         defaultValue: 'free'

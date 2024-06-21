@@ -9,7 +9,7 @@ const QuestionPage = () => {
   const [questions, setQuestions] = useState([]);
   const { isAuthenticated, role } = useAuth();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -21,7 +21,7 @@ const QuestionPage = () => {
     };
 
     fetchQuestions();
-  }, [isAuthenticated, role]);
+  }, [role]);
 
   const handleEditQuestion = (questionId) => {
     // TODO: 問題編集ページへ遷移する処理を追加
@@ -45,8 +45,8 @@ const QuestionPage = () => {
           <div key={question.id} className="question-item">
             <h2 className="question-title">{question.title}</h2>
             <div className="question-details">
-              <p className="question-category">カテゴリ: {question.Category.name}</p>
-              <p className="question-subcategory">サブカテゴリ: {question.Subcategory.name}</p>
+              <p className="question-category">カテゴリ: {question.category}</p>
+              <p className="question-subcategory">サブカテゴリ: {question.subcategory}</p>
               <p className="question-difficulty">難易度: {question.difficulty}</p>
             </div>
             <Link to={`/questions/${question.id}`} className="question-link">

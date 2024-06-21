@@ -18,11 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false
     }
   }, {
-    underscored: true,
+    tableName: 'question_choices', // スネークケースのテーブル名を指定
+    // underscored: true,
+    timestamps: true
   });
 
   QuestionChoice.associate = (models) => {
-    QuestionChoice.belongsTo(models.Question, { foreignKey: 'question_id' });
+  QuestionChoice.belongsTo(models.Question, { foreignKey: 'question_id' });
   };
 
   return QuestionChoice;
