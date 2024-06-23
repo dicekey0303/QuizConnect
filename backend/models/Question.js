@@ -39,7 +39,12 @@ module.exports = (sequelize, DataTypes) => {
     explanation: {
       type: DataTypes.TEXT,
       allowNull: true // ここにnullを許可することを指定
-    }
+    },
+    access_level: {
+      type: DataTypes.ENUM('unauthorized', 'free', 'paid', 'admin'),
+      allowNull: false,
+      defaultValue: 'unauthorized'  // デフォルト値を 'unauthorized' に設定
+    },
   });
 
   Question.associate = (models) => {

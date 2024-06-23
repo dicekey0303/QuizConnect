@@ -16,7 +16,7 @@ exports.getQuestions = async (req, res) => {
         { model: Category, attributes: ['id', 'name'] },
         { model: Subcategory, attributes: ['id', 'name'] }
       ],
-      attributes: ['id', 'title', 'difficulty', 'access_level']
+      attributes: ['id', 'title', 'difficulty', 'access_level', 'category', 'subcategory']
     });
 
     res.status(200).json(questions);
@@ -36,10 +36,12 @@ exports.getQuestionById = async (req, res) => {
         { model: Subcategory, attributes: ['id', 'name'] },
         { model: QuestionChoice, as: 'QuestionChoices', attributes: ['id', 'choice_text', 'is_correct'] },
       ],
+      attributes: ['id', 'category_id', 'subcategory_id', 'title', 'statement', 'difficulty', 'access_level', 'explanation'], // access_levelを追加
     });
     if (!question) {
       return res.status(404).json({ message: '問題が見つかりません' });
     }
+    console.log('Question data:', question.toJSON()); // デバッグ用ログ
     res.status(200).json(question);
   } catch (error) {
     console.error(error);
@@ -106,6 +108,13 @@ exports.updateQuestion = async (req, res) => {
     if (!question) {
       return res.status(404).json({ message: '問題が見つかりません' });
     }
+
+    // アクセスレベルのバリデーション（必要に応じて）
+    const validAccessLevels = ['unauthorized', 'free', 'paid', 'admin'];
+    if (!validAccessLevels.includes(access_level)) {
+      return res.status(400).json({ message: '無効なアクセスレベルです' });
+    }
+
     await question.update({
       category_id: categoryId,
       subcategory_id: subcategoryId,

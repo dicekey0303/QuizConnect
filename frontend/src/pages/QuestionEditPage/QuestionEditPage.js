@@ -30,6 +30,7 @@ const QuestionEditPage = () => {
     const fetchQuestion = async () => {
       try {
         const fetchedQuestion = await getQuestionById(id);
+        console.log('Fetched question:', fetchedQuestion); // デバッグ用ログ
         setQuestion(fetchedQuestion);
         setFormData({
           categoryId: fetchedQuestion.Category.id,
@@ -37,10 +38,18 @@ const QuestionEditPage = () => {
           title: fetchedQuestion.title,
           statement: fetchedQuestion.statement,
           difficulty: fetchedQuestion.difficulty,
-          access_level: fetchedQuestion.access_level,
+          access_level: fetchedQuestion.access_level || '',
           explanation: fetchedQuestion.explanation,
         });
-        setIsLoading(false);    
+        console.log('Form data after fetch:', formData); // デバッグ用
+        setIsLoading(false);
+
+        // カテゴリとサブカテゴリもここで取得
+        const fetchedCategories = await getCategories();
+        const fetchedSubcategories = await getSubcategories();
+        setCategories(fetchedCategories);
+        setSubcategories(fetchedSubcategories);
+
       } catch (error) {
         setError('Failed to fetch question');
         setIsLoading(false);
@@ -71,7 +80,7 @@ const QuestionEditPage = () => {
           access_level: fetchedQuestion.access_level,
           explanation: fetchedQuestion.explanation,
         });
-        setIsLoading(false);        
+        setIsLoading(false);
     } catch (error) {
         setError('Failed to fetch question data');
         setIsLoading(false);
@@ -221,22 +230,24 @@ const QuestionEditPage = () => {
             onChange={handleChange}
             required
           />
-          {errors.difficulty && <span className="error">{errors.difficulty}</span>}          
+          {errors.difficulty && <span className="error">{errors.difficulty}</span>}
         </div>
         <div className="form-group">
           <label htmlFor="access_level">Access Level:</label>
           <select
             id="access_level"
             name="access_level"
-            value={formData.access_level}
+            value={formData.access_level  || ''}
             onChange={handleChange}
             required
           >
-            <option value="">Select access level</option>
+            <option value="" disabled>Select access level</option>
+            <option value="unauthorized">Unauthorized</option>
             <option value="free">Free</option>
             <option value="paid">Paid</option>
+            {/* <option value="admin">Admin</option> */}
           </select>
-          {errors.access_level && <span className="error">{errors.access_level}</span>}         
+          {errors.access_level && <span className="error">{errors.access_level}</span>}
         </div>
         <div className="form-group">
           <label htmlFor="explanation">Explanation:</label>
@@ -247,7 +258,7 @@ const QuestionEditPage = () => {
             onChange={handleChange}
             required
           ></textarea>
-          {errors.explanation && <span className="error">{errors.explanation}</span>}                 
+          {errors.explanation && <span className="error">{errors.explanation}</span>}
         </div>
         <button type="submit">Update Question</button>
       </form>
