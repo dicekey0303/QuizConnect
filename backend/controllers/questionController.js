@@ -114,10 +114,15 @@ exports.updateQuestion = async (req, res) => {
   const questionId = req.params.id;
   const { categoryId, subcategoryId, title, statement, difficulty, access_level, explanation } = req.body;
   try {
-    const question = await Question.findByPk(questionId);
+    const question = await Question.findByPk(questionId, {
+      include: [{ model: QuestionChoice, as: 'QuestionChoices' }]
+    });
+
     if (!question) {
       return res.status(404).json({ message: '問題が見つかりません' });
     }
+
+
 
     // アクセスレベルのバリデーション（必要に応じて）
     const validAccessLevels = ['unauthorized', 'free', 'paid', 'admin'];
@@ -134,6 +139,29 @@ exports.updateQuestion = async (req, res) => {
       access_level,
       explanation
     });
+
+    // 選択肢の更新
+    if (choices && choices.length > 0) {
+      // 既存の選択肢を削除
+      await QuestionChoice.destroy({ where: { question_id: questionId } });
+
+      // 新しい選択肢を作成
+      await Promise.all(choices.map(choice =>
+        QuestionChoice.create({
+          question_id: questionId,
+          choice_text: choice.choice_text,
+          is_correct: choice.is_correct
+        })
+      ));
+    }
+
+    // 更新後の問題を取得して返す
+    const updatedQuestion = await Question.findByPk(questionId, {
+      include: [{ model: QuestionChoice, as: 'QuestionChoices' }]
+    });
+
+
+
     res.status(200).json(question);
   } catch (error) {
     console.error(error);

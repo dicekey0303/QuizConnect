@@ -58,3 +58,22 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #0056b3;
 }
+
+.choice-edit {
+  margin-bottom: 10px;
+}
+
+.choice-edit input[type="text"] {
+  width: 80%;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.choice-edit label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.choice-edit input[type="checkbox"] {
+  margin-right: 5px;
+}

@@ -6,6 +6,7 @@ import { getSubcategories } from '../../api/subcategory';
 import './QuestionEditPage.css';
 
 const QuestionEditPage = () => {
+  // try {
   const { id } = useParams();
   const navigate = useNavigate();
   const [question, setQuestion] = useState(null);
@@ -17,6 +18,7 @@ const QuestionEditPage = () => {
     difficulty: '',
     access_level: '',
     explanation: '',
+    choices: []
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,38 +28,38 @@ const QuestionEditPage = () => {
   const [subcategories, setSubcategories] = useState([]);
 
 
-  useEffect(() => {
-    const fetchQuestion = async () => {
-      try {
-        const fetchedQuestion = await getQuestionById(id);
-        console.log('Fetched question:', fetchedQuestion); // デバッグ用ログ
-        setQuestion(fetchedQuestion);
-        setFormData({
-          categoryId: fetchedQuestion.Category.id,
-          subcategoryId: fetchedQuestion.Subcategory.id,
-          title: fetchedQuestion.title,
-          statement: fetchedQuestion.statement,
-          difficulty: fetchedQuestion.difficulty,
-          access_level: fetchedQuestion.access_level || '',
-          explanation: fetchedQuestion.explanation,
-        });
-        console.log('Form data after fetch:', formData); // デバッグ用
-        setIsLoading(false);
+  // useEffect(() => {
+  //   const fetchQuestion = async () => {
+  //     try {
+  //       const fetchedQuestion = await getQuestionById(id);
+  //       console.log('Fetched question:', fetchedQuestion); // デバッグ用ログ
+  //       setQuestion(fetchedQuestion);
+  //       setFormData({
+  //         categoryId: fetchedQuestion.Category.id,
+  //         subcategoryId: fetchedQuestion.Subcategory.id,
+  //         title: fetchedQuestion.title,
+  //         statement: fetchedQuestion.statement,
+  //         difficulty: fetchedQuestion.difficulty,
+  //         access_level: fetchedQuestion.access_level || '',
+  //         explanation: fetchedQuestion.explanation,
+  //       });
+  //       console.log('Form data after fetch:', formData); // デバッグ用
+  //       setIsLoading(false);
 
-        // カテゴリとサブカテゴリもここで取得
-        const fetchedCategories = await getCategories();
-        const fetchedSubcategories = await getSubcategories();
-        setCategories(fetchedCategories);
-        setSubcategories(fetchedSubcategories);
+  //       // カテゴリとサブカテゴリもここで取得
+  //       const fetchedCategories = await getCategories();
+  //       const fetchedSubcategories = await getSubcategories();
+  //       setCategories(fetchedCategories);
+  //       setSubcategories(fetchedSubcategories);
 
-      } catch (error) {
-        setError('Failed to fetch question');
-        setIsLoading(false);
-      }
-    };
+  //     } catch (error) {
+  //       setError('Failed to fetch question');
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchQuestion();
-  }, [id]);
+  //   fetchQuestion();
+  // }, [id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,9 +81,15 @@ const QuestionEditPage = () => {
           difficulty: fetchedQuestion.difficulty,
           access_level: fetchedQuestion.access_level,
           explanation: fetchedQuestion.explanation,
+          choices: fetchedQuestion.QuestionChoices ? fetchedQuestion.QuestionChoices.map(choice => ({
+            id: choice.id,
+            choice_text: choice.choice_text,
+            is_correct: choice.is_correct
+          })) : []
         });
         setIsLoading(false);
     } catch (error) {
+        console.error('Error fetching data:', error);
         setError('Failed to fetch question data');
         setIsLoading(false);
       }
@@ -150,6 +158,14 @@ const QuestionEditPage = () => {
       }
     };
 
+  const handleChoiceChange = (index, field, value) => {
+    const newChoices = [...formData.choices];
+    newChoices[index][field] = value;
+    setFormData({ ...formData, choices: newChoices });
+  };
+
+
+
   if (isLoading) {
     return <div className="loading">Loading...</div>;
   }
@@ -158,6 +174,8 @@ const QuestionEditPage = () => {
     return <div className="error">{error}</div>;
   }
 
+
+  console.log('Rendering QuestionEditPage:', { question, formData, isLoading, error });
   return (
     <div className="question-edit-page">
       <h1>Edit Question</h1>
@@ -208,7 +226,7 @@ const QuestionEditPage = () => {
             onChange={handleChange}
             required
           />
-           {errors.title && <span className="error">{errors.title}</span>}
+          {errors.title && <span className="error">{errors.title}</span>}
         </div>
         <div className="form-group">
           <label htmlFor="statement">Statement:</label>
@@ -260,10 +278,46 @@ const QuestionEditPage = () => {
           ></textarea>
           {errors.explanation && <span className="error">{errors.explanation}</span>}
         </div>
+
+        <h2>Choices</h2>
+        {formData.choices && formData.choices.length > 0 ? (
+          formData.choices.map((choice, index) => (
+            <div key={index} className="choice-edit">
+              <input
+                type="text"
+                value={choice.choice_text}
+                onChange={(e) => handleChoiceChange(index, 'choice_text', e.target.value)}
+              />
+              <label>
+                <input
+                  type="checkbox"
+                  checked={choice.is_correct}
+                  onChange={(e) => handleChoiceChange(index, 'is_correct', e.target.checked)}
+                />
+                Correct Answer
+              </label>
+            </div>
+          ))
+        ) : (
+          <p>No choices available</p>
+        )}
+
+
         <button type="submit">Update Question</button>
       </form>
     </div>
   );
+
+// return (
+//   <div className="question-edit-page">
+//     <h1>Edit Question</h1>
+//     <pre>{JSON.stringify(formData, null, 2)}</pre>
+//   </div>
+// );
+//   } catch (error) {
+//   console.error('Render error:', error);
+//   return <div>An error occurred: {error.message}</div>;
+// }
 };
 
 export default QuestionEditPage;
