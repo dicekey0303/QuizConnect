@@ -1,13 +1,23 @@
 const { Question, Category, Subcategory, QuestionChoice } = require('../models');
+const { Sequelize } = require('sequelize');
 
 // 問題一覧の取得
 exports.getQuestions = async (req, res) => {
   try {
-    const { access_level } = req.query;
+    const { access_level, category, subcategory, difficulty } = req.query;
     const where = {};
 
     if (access_level) {
       where.access_level = access_level.split(',');
+    }
+    if (category) {
+      where.category_id = category;
+    }
+    if (subcategory) {
+      where.subcategory_id = subcategory;
+    }
+    if (difficulty) {
+      where.difficulty = difficulty;
     }
 
     const questions = await Question.findAll({
@@ -205,6 +215,19 @@ exports.getQuestionsByCategoryId = async (req, res) => {
       attributes: ['id', 'title', 'difficulty']
     });
     res.status(200).json(questions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'サーバーエラー' });
+  }
+};
+
+exports.getDifficulties = async (req, res) => {
+  try {
+    const difficulties = await Question.findAll({
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('difficulty')), 'difficulty']],
+      raw: true
+    });
+    res.status(200).json(difficulties.map(d => d.difficulty));
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'サーバーエラー' });

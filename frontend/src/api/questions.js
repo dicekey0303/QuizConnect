@@ -1,24 +1,50 @@
 import api from './index';
 import axios from 'axios';
 
-export const getQuestions = async (role) => {
-    try {
-      let response;
-      if (role === 'admin') {
-        response = await api.get('/questions');
-      } else if (role === 'paid') {
-        response = await api.get('/questions?access_level=free,paid,unauthorized');
-      } else if (role === 'free') {
-        response = await api.get('/questions?access_level=free,unauthorized');
-      } else {
-        response = await api.get('/questions?access_level=unauthorized');
-      }
-      return response.data;
-    } catch (error) {
-      throw new Error('Failed to fetch questions');
-    }
-  };
 
+export const getQuestions = async (role, searchParams = {}) => {
+  try {
+    let url = '/questions?';
+    if (role) {
+      if (role === 'admin') {
+        url += 'access_level=unauthorized,free,paid,admin&';
+      } else if (role === 'paid') {
+        url += 'access_level=unauthorized,free,paid&';
+      } else if (role === 'free') {
+        url += 'access_level=unauthorized,free&';
+      }
+    } else {
+      url += 'access_level=unauthorized&';
+    }
+
+    if (searchParams.category) url += `category=${searchParams.category}&`;
+    if (searchParams.subcategory) url += `subcategory=${searchParams.subcategory}&`;
+    if (searchParams.difficulty) url += `difficulty=${searchParams.difficulty}&`;
+
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch questions');
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await api.get('/categories');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch categories');
+  }
+};
+
+export const getSubcategories = async () => {
+  try {
+    const response = await api.get('/subcategories');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch subcategories');
+  }
+};
 
 export const updateQuestion = async (questionId, questionData) => {
     try {
@@ -69,5 +95,32 @@ export const createQuestion = async (questionData) => {
     return response.data;
   } catch (error) {
     throw new Error('Failed to create question');
+  }
+};
+
+export const getAllCategories = async () => {
+  try {
+    const response = await api.get('/categories/all');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch categories');
+  }
+};
+
+export const getAllSubcategories = async () => {
+  try {
+    const response = await api.get('/subcategories/all');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch subcategories');
+  }
+};
+
+export const getDifficulties = async () => {
+  try {
+    const response = await api.get('/questions/difficulties');
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch difficulties');
   }
 };

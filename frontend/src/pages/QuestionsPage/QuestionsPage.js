@@ -1,32 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { getQuestions, deleteQuestion } from '../../api/questions';
+import { getQuestions, deleteQuestion, getAllCategories, getAllSubcategories, getDifficulties } from '../../api/questions';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import './QuestionsPage.css';
 
 const QuestionPage = () => {
   const [questions, setQuestions] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [difficulties, setDifficulties] = useState([]);
+  const [searchParams, setSearchParams] = useState({
+    category: '',
+    subcategory: '',
+    difficulty: ''
+  });
   const { isAuthenticated, role } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchQuestions = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getQuestions(role);
-        setQuestions(data);
+        const [questionsData, categoriesData, subcategoriesData, difficultiesData] = await Promise.all([
+          getQuestions(role),
+          getAllCategories(),
+          getAllSubcategories(),
+          getDifficulties()
+        ]);
+        console.log('Fetched data:', { questionsData, categoriesData, subcategoriesData, difficultiesData });
+        setQuestions(questionsData);
+        setCategories(categoriesData);
+        setSubcategories(subcategoriesData);
+        setDifficulties(difficultiesData);
       } catch (error) {
-        console.error('Error fetching questions:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchQuestions();
+    fetchData();
   }, [role]);
+
+  const handleSearchChange = (e) => {
+    setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
+  };
+
+  const handleSearch = async () => {
+    try {
+      const filteredQuestions = await getQuestions(role, searchParams);
+      setQuestions(filteredQuestions);
+    } catch (error) {
+      console.error('Error searching questions:', error);
+    }
+  };
 
   const handleEditQuestion = (questionId) => {
     // TODO: 問題編集ページへ遷移する処理を追加
     navigate(`/questions/${questionId}/edit`);
   };
+
 
   const handleDeleteQuestion = async (questionId) => {
     try {
@@ -40,6 +71,30 @@ const QuestionPage = () => {
   return (
     <div className="question-page">
       <h1 className="question-page-title">問題一覧</h1>
+
+      <div className="search-form">
+        <select name="category" onChange={handleSearchChange} value={searchParams.category}>
+          <option value="">全てのカテゴリ</option>
+          {categories.map(category => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
+        </select>
+        <select name="subcategory" onChange={handleSearchChange} value={searchParams.subcategory}>
+          <option value="">全てのサブカテゴリ</option>
+          {subcategories.map(subcategory => (
+            <option key={subcategory.id} value={subcategory.id}>{subcategory.name}</option>
+          ))}
+        </select>
+        <select name="difficulty" onChange={handleSearchChange} value={searchParams.difficulty}>
+          <option value="">全ての難易度</option>
+          {difficulties.map(difficulty => (
+            <option key={difficulty} value={difficulty}>{difficulty}</option>
+          ))}
+        </select>
+        <button onClick={handleSearch}>検索</button>
+      </div>
+
+
       <div className="question-list">
         {questions.map((question) => (
           <div key={question.id} className="question-item">

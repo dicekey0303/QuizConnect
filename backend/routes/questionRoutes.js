@@ -4,6 +4,10 @@ const questionController = require('../controllers/questionController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 router.get('/', questionController.getQuestions);
+
+// 新しいルートを追加
+router.get('/difficulties', questionController.getDifficulties);
+
 router.get('/:id', questionController.getQuestionById);
 router.post('/', questionController.createQuestion);
 router.put('/:id', questionController.updateQuestion);
